@@ -1,20 +1,10 @@
 use std::{env, fs, path::PathBuf};
 
-use crate::{model::mod_container::ModContainer, utils::download::download_mod};
+use crate::{model::mod_container::ModContainer, utils::{download::download_mod, files::create_dir_all_or_fail}};
 
 mod constants;
 mod model;
 mod utils;
-
-fn create_dir_all_or_fail<P: AsRef<std::path::Path>>(path: P, name: Option<&str>) {
-    fs::create_dir_all(path).expect(
-        format!(
-            "failed to create path {name}",
-            name = name.unwrap_or_default()
-        )
-        .as_str(),
-    )
-}
 
 #[tokio::main]
 async fn main() -> Result<(), ()> {
