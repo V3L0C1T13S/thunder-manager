@@ -1,10 +1,10 @@
 use serde::{Deserialize, Serialize};
 
-use super::thunderstore_mod::ThunderstoreMod;
+use super::game_mod::GameMod;
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct ModContainer {
     pub name: String,
     pub version: Option<i32>,
-    pub mods: Vec<ThunderstoreMod>,
+    pub mods: Vec<GameMod>,
 }
