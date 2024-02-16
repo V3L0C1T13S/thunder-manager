@@ -1,0 +1,14 @@
+{
+    "name": "Test container",
+    "version": 1,
+    "mods": [{
+        "file_name": "bepinex.zip",
+        "url": "https://thunderstore.io/package/download/BepInEx/BepInExPack/5.4.2100",
+        "version": 1
+    }, {
+        "file_name": "skinwalkers.zip",
+        "url": "https://thunderstore.io/package/download/RugbugRedfern/Skinwalkers/4.0.1",
+        "version": 1,
+        "mod_type": "root"
+    }]
+}
