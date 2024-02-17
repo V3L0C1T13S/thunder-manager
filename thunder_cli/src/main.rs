@@ -1,12 +1,8 @@
 use std::{env, fs, path::PathBuf};
 
-use crate::{
-    model::mod_container::ModContainer,
-    utils::{download::download_mod, files::create_dir_all_or_fail},
-};
-
-mod model;
-mod utils;
+use crate::utils::{download::download_mod, files::create_dir_all_or_fail};
+use thunder_manager_common::model::mod_container::ModContainer;
+use thunder_manager_common::utils;
 
 #[tokio::main]
 async fn main() -> Result<(), ()> {

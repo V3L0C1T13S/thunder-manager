@@ -4,11 +4,10 @@ use std::{
     path::{self, PathBuf},
 };
 
+use super::files::create_dir_all_or_fail;
 use super::files::is_excluded_file;
-use crate::{
-    model::thunderstore::manifest::ThunderstoreManifest, utils::files::create_dir_all_or_fail,
-};
 
+use crate::model::thunderstore::manifest::ThunderstoreManifest;
 use crate::model::game_mod::GameMod;
 
 pub async fn download_mod(thunderstore_mod: GameMod, container_path: PathBuf) {
