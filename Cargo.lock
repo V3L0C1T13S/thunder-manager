@@ -1013,9 +1013,6 @@ dependencies = [
 name = "thunder_cli"
 version = "0.1.0"
 dependencies = [
- "serde",
- "serde_json",
- "serde_yaml",
  "thunder_manager_common",
  "tokio",
 ]
@@ -1028,6 +1025,8 @@ dependencies = [
  "reqwest",
  "serde",
  "serde_json",
+ "serde_yaml",
+ "tokio",
  "zip-extract",
 ]
 
