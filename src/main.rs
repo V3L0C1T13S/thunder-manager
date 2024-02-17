@@ -5,7 +5,6 @@ use crate::{
     utils::{download::download_mod, files::create_dir_all_or_fail},
 };
 
-mod constants;
 mod model;
 mod utils;
 
@@ -27,7 +26,7 @@ async fn main() -> Result<(), ()> {
             serde_yaml::from_str(contents.as_str()).expect("couldn't parse yaml")
         };
 
-        let container_path = PathBuf::from(constants::MODS_DIR).join(&container.name);
+        let container_path = PathBuf::from(utils::constants::MODS_DIR).join(&container.name);
         let download_dir = &container_path.join("downloads");
         let output_dir = &container_path.join("output");
         let workdir = &container_path.join("work");
