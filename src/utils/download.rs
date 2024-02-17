@@ -66,16 +66,23 @@ pub async fn download_mod(thunderstore_mod: GameMod, container_path: PathBuf) {
             .unwrap_or_else(|_| panic!("couldn't extract {file_name}"));
 
         let manifest_path = target_path.join("manifest.json");
-        let manifest_data = fs::read_to_string(manifest_path).expect("couldn't load manifest.json");
-        let thunderstore_manifest: ThunderstoreManifest =
-            serde_json::from_str(manifest_data.as_str())
-                .expect("couldn't deserialize manifest.json");
+        let manifest_data = fs::read_to_string(manifest_path);
 
-        println!(
-            "Resolved {file_name} to {name}.",
-            file_name = thunderstore_mod.file_name,
-            name = thunderstore_manifest.name
-        );
+        let thunderstore_manifest: Option<ThunderstoreManifest> =
+            if let Ok(manifest_data) = manifest_data {
+                serde_json::from_str(manifest_data.as_str())
+                    .expect("couldn't deserialize manifest data")
+            } else {
+                None
+            };
+
+        if thunderstore_manifest.is_some() {
+            println!(
+                "Resolved {file_name} to {name}.",
+                file_name = thunderstore_mod.file_name,
+                name = thunderstore_manifest.as_ref().unwrap().name
+            );
+        }
         let resolved_dir = match thunderstore_mod
             .mod_type
             .clone()
@@ -89,7 +96,13 @@ pub async fn download_mod(thunderstore_mod: GameMod, container_path: PathBuf) {
                     target_path
                 }
             }
-            _ => target_path.join(thunderstore_manifest.name),
+            _ => {
+                if let Some(thunderstore_manifest) = thunderstore_manifest {
+                    target_path.join(thunderstore_manifest.name)
+                } else {
+                    target_path
+                }
+            }
         };
         assert!(
             path::Path::exists(resolved_dir.as_path()),
