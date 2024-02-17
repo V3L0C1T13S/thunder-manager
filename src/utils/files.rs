@@ -7,11 +7,10 @@ pub fn is_excluded_file(name: &str) -> bool {
 }
 
 pub fn create_dir_all_or_fail<P: AsRef<std::path::Path>>(path: P, name: Option<&str>) {
-    fs::create_dir_all(path).expect(
-        format!(
+    fs::create_dir_all(path).unwrap_or_else(|_| {
+        panic!(
             "failed to create path {name}",
             name = name.unwrap_or_default()
         )
-        .as_str(),
-    )
+    })
 }

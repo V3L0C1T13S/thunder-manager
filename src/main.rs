@@ -1,6 +1,9 @@
 use std::{env, fs, path::PathBuf};
 
-use crate::{model::mod_container::ModContainer, utils::{download::download_mod, files::create_dir_all_or_fail}};
+use crate::{
+    model::mod_container::ModContainer,
+    utils::{download::download_mod, files::create_dir_all_or_fail},
+};
 
 mod constants;
 mod model;
@@ -14,7 +17,7 @@ async fn main() -> Result<(), ()> {
     if let Some(file_path) = env::args().nth(1) {
         println!("ok so file is {}", file_path);
 
-        let contents = fs::read_to_string(&file_path).expect(format!("file not found").as_str());
+        let contents = fs::read_to_string(&file_path).unwrap_or_else(|_| panic!("file not found"));
 
         println!("contents: {}", contents);
 
@@ -32,9 +35,9 @@ async fn main() -> Result<(), ()> {
         println!("container name: {}", &container.name);
         println!("container version: {}", &container.version.unwrap_or(0));
         create_dir_all_or_fail(&container_path, Some("container"));
-        create_dir_all_or_fail(&download_dir, Some("download"));
-        create_dir_all_or_fail(&output_dir, Some("output"));
-        create_dir_all_or_fail(&workdir, Some("work"));
+        create_dir_all_or_fail(download_dir, Some("download"));
+        create_dir_all_or_fail(output_dir, Some("output"));
+        create_dir_all_or_fail(workdir, Some("work"));
 
         let tasks: Vec<_> = container
             .mods

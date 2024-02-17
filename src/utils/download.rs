@@ -39,19 +39,18 @@ pub async fn download_mod(thunderstore_mod: GameMod, container_path: PathBuf) {
         );
         let bytes = reqwest::get(url)
             .await
-            .expect(format!("failed to download mod from {url}").as_str())
+            .unwrap_or_else(|_| panic!("failed to download mod from {url}"))
             .bytes()
             .await
             .expect("couldn't get response data");
 
-        let file: Result<fs::File, io::Error> =
-            Ok(fs::File::create(&file_path).expect("couldn't open file"));
+        let file: Result<fs::File, io::Error> = fs::File::create(&file_path);
 
         io::copy(&mut Cursor::new(bytes), &mut file.unwrap()).expect("couldn't write data to file");
         println!(
             "Finished downloading {name}.",
             name = thunderstore_mod.file_name
-        )
+        );
     }
 
     // p2 - we've got the file, sweet. now what do we do with it?
@@ -64,7 +63,7 @@ pub async fn download_mod(thunderstore_mod: GameMod, container_path: PathBuf) {
         // extract files
         println!("Extracting {name}...", name = thunderstore_mod.file_name);
         zip_extract::extract(Cursor::new(data), &target_path, false)
-            .expect(format!("couldn't extract {file_name}").as_str());
+            .unwrap_or_else(|_| panic!("couldn't extract {file_name}"));
 
         let manifest_path = target_path.join("manifest.json");
         let manifest_data = fs::read_to_string(manifest_path).expect("couldn't load manifest.json");
@@ -92,11 +91,10 @@ pub async fn download_mod(thunderstore_mod: GameMod, container_path: PathBuf) {
             }
             _ => target_path.join(thunderstore_manifest.name),
         };
-        assert_eq!(
+        assert!(
             path::Path::exists(resolved_dir.as_path()),
-            true,
-            "{}",
-            format!("Couldn't find root dir for {}", thunderstore_mod.file_name)
+            "Couldn't find root dir for {}",
+            thunderstore_mod.file_name
         );
 
         // p3. move files to output dir
