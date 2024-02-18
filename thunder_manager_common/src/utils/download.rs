@@ -7,8 +7,8 @@ use std::{
 use super::files::create_dir_all_or_fail;
 use super::files::is_excluded_file;
 
-use crate::model::thunderstore::manifest::ThunderstoreManifest;
 use crate::model::game_mod::GameMod;
+use crate::model::thunderstore::manifest::ThunderstoreManifest;
 
 pub async fn download_mod(thunderstore_mod: GameMod, container_path: PathBuf) {
     let download_dir = container_path.join("downloads");
@@ -69,8 +69,10 @@ pub async fn download_mod(thunderstore_mod: GameMod, container_path: PathBuf) {
 
         let thunderstore_manifest: Option<ThunderstoreManifest> =
             if let Ok(manifest_data) = manifest_data {
-                serde_json::from_str(manifest_data.as_str())
-                    .expect("couldn't deserialize manifest data")
+                serde_json::from_str(manifest_data.as_str()).unwrap_or_else(|err| {
+                    println!("Failed to Thunderstore parse manifest.json: {err}");
+                    None
+                })
             } else {
                 None
             };
