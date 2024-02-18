@@ -1,2 +1,2 @@
 [workspace]
-members = ["thunder_cli", "thunder_manager_common"]
+members = ["thunder_cli", "thunder_manager_common", "thunder_gui/src-tauri"]

@@ -2,13 +2,21 @@ use super::constants;
 use super::download::download_mod;
 use super::files::create_dir_all_or_fail;
 use crate::model::mod_container::ModContainer;
+use serde::Deserialize;
 use std::{fs, path::PathBuf};
 
-pub async fn install_file(file_path: &str) -> Result<(), ()> {
-    let contents = fs::read_to_string(file_path).unwrap_or_else(|_| panic!("file not found"));
+#[derive(Deserialize, PartialEq, Eq)]
+pub enum ContainerFileType {
+    Json = 0,
+    Yaml = 1,
+}
 
+pub async fn install_from_contents(
+    contents: String,
+    file_type: ContainerFileType,
+) -> Result<(), ()> {
     println!("contents: {}", contents);
-    let container: ModContainer = if file_path.ends_with(".json") {
+    let container: ModContainer = if file_type == ContainerFileType::Json {
         serde_json::from_str(contents.as_str()).expect("couldn't parse json")
     } else {
         serde_yaml::from_str(contents.as_str()).expect("couldn't parse yaml")
@@ -45,4 +53,18 @@ pub async fn install_file(file_path: &str) -> Result<(), ()> {
     );
 
     Ok(())
+}
+
+pub async fn install_file(file_path: &str) -> Result<(), ()> {
+    let contents = fs::read_to_string(file_path).unwrap_or_else(|_| panic!("file not found"));
+
+    install_from_contents(
+        contents,
+        if file_path.ends_with(".json") {
+            ContainerFileType::Json
+        } else {
+            ContainerFileType::Yaml
+        },
+    )
+    .await
 }
