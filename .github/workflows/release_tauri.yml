@@ -35,6 +35,7 @@ jobs:
 
       - name: install frontend dependencies
         run: |
+          cd thunder_gui
           corepack enable pnpm
           pnpm install # change this to npm or pnpm depending on which one you use
 
