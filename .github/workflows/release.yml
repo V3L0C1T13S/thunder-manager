@@ -20,4 +20,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.RELEASE_PAT }}
         with:
           RUSTTARGET: ${{ matrix.target }}
+          SRC_DIR: thunder_cli
           EXTRA_FILES: "README.md LICENSE.md"
