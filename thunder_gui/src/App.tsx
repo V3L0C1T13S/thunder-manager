@@ -4,6 +4,8 @@ import { invoke } from "@tauri-apps/api/tauri";
 import "./App.css";
 import { Commands, ContainerFileType } from "./utils";
 import { SelectedFiles, UseFilePickerConfig } from "use-file-picker/types";
+import { Alert, Box, Button, CircularProgress, Container, Typography } from "@mui/material";
+import CheckIcon from '@mui/icons-material/Check';
 
 function App() {
   const [processing, setProcessing] = useState(false);
@@ -28,32 +30,35 @@ function App() {
   const { openFilePicker, filesContent, loading } = useFilePicker(params);
 
   return (
-    <div className="container">
-      <h1>Thunder Manager</h1>
-
-      <div>
-        <button
+    <Container maxWidth="sm">
+      <Box sx={{ my: 4 }} textAlign="center">
+        <Button
           type="submit"
           onClick={() => openFilePicker()}
         >
           Select file
-        </button>
+        </Button>
         <br />
         {loading ? (<div>
           <p>Loading file...</p>
         </div>) : <></>}
         {filesContent.map((file, index) => (
           <div>
-            <h2>{file.name}</h2>
-            <div key={index}>{processing ? `Processing ${file.name}...` : "Done!"}</div>
+            <Typography variant="h5">{file.name}</Typography>
+            {processing ? <>
+              <CircularProgress />
+              <Typography key={index}>Processing {file.name}...</Typography>
+            </> : <Alert icon={<CheckIcon fontSize="inherit" />} severity="success">
+              Done!
+            </Alert>}
             <br />
           </div>
         )
         )}
-      </div>
+      </Box>
 
-      <p>{"Select a container file to use (.json or .yaml)"}</p>
-    </div >
+      <Typography align="center">{"Select a container file to use (.json or .yaml)"}</Typography>
+    </Container >
   );
 }
 

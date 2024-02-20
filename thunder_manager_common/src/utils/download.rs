@@ -143,6 +143,6 @@ pub async fn download_mod(thunderstore_mod: GameMod, container_path: PathBuf) {
 
         println!("Installed {name}.", name = thunderstore_mod.file_name);
     } else {
-        println!("unknown file type");
+        println!("unhandled file type");
     }
 }
