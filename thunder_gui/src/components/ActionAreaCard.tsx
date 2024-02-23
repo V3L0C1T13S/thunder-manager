@@ -1,10 +1,11 @@
-import { Card, CardActionArea, CardContent, CardMedia, Typography } from '@mui/material';
+import { Box, Card, CardActionArea, CardContent, CardMedia, Chip, Divider, Stack, Typography } from '@mui/material';
 import { placeholderImages } from '../utils/assets';
 
 export type ActionAreaCardProps = {
     title: string,
     content: string,
     image?: string,
+    categories?: string[],
     alt?: string,
     height?: number,
     onClick?: () => void,
@@ -33,6 +34,14 @@ export default function ActionAreaCard(props: ActionAreaCardProps) {
                     </Typography>
                 </CardContent>
             </CardActionArea>
+            {props.categories ? <>
+                <Divider />
+                <Box sx={{ p: 2 }}>
+                    <Stack direction="row" spacing={1}>
+                        {props.categories.map((category) => <Chip color="primary" label={category} size="small" />)}
+                    </Stack>
+                </Box>
+            </> : <></>}
         </Card>
     );
 }

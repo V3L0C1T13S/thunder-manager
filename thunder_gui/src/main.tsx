@@ -12,6 +12,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Browse from "./pages/Browse";
 import Community from "./pages/Community";
 import { ThemeProvider, createTheme } from "@mui/material";
+import Package from "./pages/Package";
 
 const darkTheme = createTheme({
   palette: {
@@ -27,8 +28,8 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
         <Routes >
           <Route path="/" element={<App />} />
           <Route path="/browse" element={<Browse />} />
-          <Route path="/browse/:cursor" element={<Browse />} />
           <Route path="/community/:id" element={<Community />} />
+          <Route path="/package/:namespace/:name" element={<Package />} />
         </Routes>
       </ThemeProvider>
     </BrowserRouter>

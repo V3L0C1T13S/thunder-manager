@@ -1,6 +1,6 @@
 import { invoke } from "@tauri-apps/api/tauri";
 import { ListResponse } from "./community";
-import { PackageList } from "./package";
+import { ThunderstorePackage, PackageList } from "./package";
 
 export enum Commands {
     InstallFile = "install_file"
@@ -27,4 +27,15 @@ export async function GetCommunityPackages(identifier: string) {
     });
 
     return packages;
+}
+
+export async function FetchPackage(name: string, namespace: string) {
+    console.log(`fetching pkg ${namespace} ${name}`);
+
+    const data = await invoke<ThunderstorePackage>("fetch_package", {
+        name,
+        namespace
+    });
+
+    return data;
 }

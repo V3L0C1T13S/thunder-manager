@@ -1,6 +1,6 @@
 import { Box, Container, Grid, Skeleton, Typography } from "@mui/material";
-import { useState } from "react";
-import { useParams } from "react-router-dom"
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom"
 import { PackageList } from "../utils/package";
 import { GetCommunityPackages } from "../utils";
 import ActionAreaCard from "../components/ActionAreaCard";
@@ -8,14 +8,22 @@ import ActionAreaCard from "../components/ActionAreaCard";
 export default function Community() {
     const { id } = useParams();
     const [packages, setPackages] = useState<PackageList | null>(null);
+    const navigate = useNavigate();
 
-    if (!id) return <Container>
-        <Typography>Awkward... You didn't choose a community.</Typography>
-    </Container>
+    useEffect(() => {
+        async function fetchPackages() {
+            try {
+                if (!id) return;
 
-    if (!packages) {
-        GetCommunityPackages(id).then((list) => setPackages(list));
-    }
+                const response = await GetCommunityPackages(id)
+                setPackages(response);
+            } catch (e) {
+                console.error("error fetching packages:", e);
+            }
+        }
+
+        if (!packages) fetchPackages();
+    });
 
     return <Container maxWidth="sm">
         <Box textAlign="center">
@@ -28,6 +36,8 @@ export default function Community() {
                         title={card.package_name}
                         content={`${card.download_count} Downloads`}
                         image={card.image_src}
+                        categories={card.categories.map((category) => category.name)}
+                        onClick={() => navigate(`/package/${card.namespace}/${card.package_name}`)}
                     />
                 )) : <Skeleton variant="rounded" width={500} height={100} />}
             </Grid>
