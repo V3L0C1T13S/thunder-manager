@@ -1,15 +1,22 @@
-use std::env;
+use clap::Parser;
 use thunder_manager_common::utils::installer::install_file;
+
+#[derive(Parser, Debug)]
+#[command(version, about, long_about = None)]
+struct Args {
+    /// Name of the file to use (YAML or JSON)
+    #[arg(short, long)]
+    file_name: String,
+}
 
 #[tokio::main]
 async fn main() -> Result<(), ()> {
-    if let Some(file_path) = env::args().nth(1) {
-        println!("ok so file is {}", file_path);
+    let args = Args::parse();
 
-        install_file(file_path.as_str())
-            .await
-            .expect("Couldn't install mods");
-    }
+    println!("ok so file is {}", args.file_name);
+    install_file(args.file_name.as_str())
+        .await
+        .expect("Couldn't install mods");
 
     Ok(())
 }

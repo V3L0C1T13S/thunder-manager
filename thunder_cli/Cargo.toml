@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 tokio = { version = "1.36.0", features = ["macros", "rt", "rt-multi-thread"] }
 thunder_manager_common = { path = "../thunder_manager_common" }
+clap = { version = "4.5.1", features = ["derive"] }
