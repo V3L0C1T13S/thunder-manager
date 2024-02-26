@@ -23,7 +23,13 @@ pub async fn download_mod(thunderstore_mod: GameMod, container_path: PathBuf) {
 
     // p1. download file (skip if already downloaded)
 
-    if path::Path::new(file_path.to_str().unwrap()).exists() {
+    if path::Path::new(
+        file_path
+            .to_str()
+            .expect("couldn't unwrap file_path to string"),
+    )
+    .exists()
+    {
         println!(
             "already downloaded {name} - skipping",
             name = thunderstore_mod.file_name
@@ -57,20 +63,20 @@ pub async fn download_mod(thunderstore_mod: GameMod, container_path: PathBuf) {
     if thunderstore_mod.file_name.ends_with(".zip") {
         let file_name = &thunderstore_mod.file_name;
         let data = fs::read(file_path).expect("couldn't read zip archive.");
-        let target_path = PathBuf::from(&workdir).join(file_name);
+        let extraction_dir = PathBuf::from(&workdir).join(file_name);
 
         // extract files
         println!("Extracting {name}...", name = thunderstore_mod.file_name);
-        zip_extract::extract(Cursor::new(data), &target_path, false)
+        zip_extract::extract(Cursor::new(data), &extraction_dir, false)
             .unwrap_or_else(|_| panic!("couldn't extract {file_name}"));
 
-        let manifest_path = target_path.join("manifest.json");
+        let manifest_path = extraction_dir.join("manifest.json");
         let manifest_data = fs::read_to_string(manifest_path);
 
         let thunderstore_manifest: Option<ThunderstoreManifest> =
             if let Ok(manifest_data) = manifest_data {
                 serde_json::from_str(manifest_data.as_str()).unwrap_or_else(|err| {
-                    println!("Failed to Thunderstore parse manifest.json: {err}");
+                    println!("Failed to parse Thunderstore manifest.json: {err}");
                     None
                 })
             } else {
@@ -92,16 +98,16 @@ pub async fn download_mod(thunderstore_mod: GameMod, container_path: PathBuf) {
         {
             "root" => {
                 if thunderstore_mod.root.is_some() {
-                    target_path.join(thunderstore_mod.root.unwrap())
+                    extraction_dir.join(thunderstore_mod.root.unwrap())
                 } else {
-                    target_path
+                    extraction_dir
                 }
             }
             _ => {
                 if let Some(thunderstore_manifest) = thunderstore_manifest {
-                    target_path.join(thunderstore_manifest.name)
+                    extraction_dir.join(thunderstore_manifest.name)
                 } else {
-                    target_path
+                    extraction_dir
                 }
             }
         };
@@ -126,7 +132,7 @@ pub async fn download_mod(thunderstore_mod: GameMod, container_path: PathBuf) {
                         .expect("invalid file")
                         .file_name()
                         .to_str()
-                        .unwrap_or_default(),
+                        .unwrap_or_else(|| panic!("couldn't unwrap file name to str")),
                 )
             })
             .map(|v| v.expect("invalid file").path());

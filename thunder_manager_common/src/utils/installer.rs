@@ -23,15 +23,15 @@ pub async fn install_from_contents(
     };
 
     let container_path = PathBuf::from(constants::MODS_DIR).join(&container.name);
-    let download_dir = &container_path.join("downloads");
-    let output_dir = &container_path.join("output");
-    let workdir = &container_path.join("work");
+    let download_dir = container_path.join("downloads");
+    let output_dir = container_path.join("output");
+    let workdir = container_path.join("work");
 
-    println!("container name: {}", &container.name);
-    println!("container version: {}", &container.version.unwrap_or(0));
+    println!("container name: {}", container.name);
+    println!("container version: {}", container.version.unwrap_or(0));
     create_dir_all_or_fail(&container_path, Some("container"));
     create_dir_all_or_fail(download_dir, Some("download"));
-    create_dir_all_or_fail(output_dir, Some("output"));
+    create_dir_all_or_fail(&output_dir, Some("output"));
     create_dir_all_or_fail(workdir, Some("work"));
 
     let tasks: Vec<_> = container
