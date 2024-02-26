@@ -13,11 +13,14 @@ enum Commands {
         #[arg(index = 1)]
         url: String,
     },
+    /// Browse packages in a community
     Browse {
         #[arg(index = 1)]
         community_name: String,
     },
+    /// List all communities
     Communities {},
+    /// Show info on a given package
     Show {
         #[arg(index = 1)]
         community_name: String,
