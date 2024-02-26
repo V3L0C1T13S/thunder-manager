@@ -12,11 +12,11 @@ pub type DownloadCount = StringOri32;
 
 #[derive(Deserialize, Serialize)]
 pub struct PackageVersionExperimental {
-    namespace: Option<String>,
-    name: String,
-    version_number: String,
-    full_name: Option<String>,
-    description: String,
+    pub namespace: Option<String>,
+    pub name: String,
+    pub version_number: String,
+    pub full_name: Option<String>,
+    pub description: String,
 }
 
 #[derive(Deserialize, Serialize)]
