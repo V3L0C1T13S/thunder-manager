@@ -50,7 +50,7 @@ async fn main() -> Result<(), ()> {
 
             let packages = fetch_community_packages(community_identifier)
                 .await
-                .unwrap_or_else(|_| panic!("Failed to fetch packages"));
+                .unwrap_or_else(|err| panic!("Failed to fetch packages: {err}"));
 
             for package in packages.packages {
                 println!("{}", package.package_name);
